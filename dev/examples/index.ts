@@ -1,4 +1,4 @@
-import { getExamples } from '../../../examples';
+import { getExamples } from '@jsonforms/examples';
 
 const examples = getExamples();
 

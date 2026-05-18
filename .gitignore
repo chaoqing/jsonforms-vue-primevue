@@ -1,9 +1,20 @@
+.nyc_output
+stats.html
+.coveralls.yml
+.pnpm-store
+.playwright-mcp
+
 # Build output
+dist
+lib
+coverage
+node_modules
 lib/
 example/dist/
+docs
 
 # Dev server
-server.log
+*.log
 
 # npm pack output
 *.tgz
@@ -14,6 +25,8 @@ server.log
 # IDE
 .idea/
 .vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
 
 # OS
 .DS_Store
