@@ -1,0 +1,182 @@
+<template>
+  <control-wrapper
+    v-bind="controlWrapper"
+    :styles="styles"
+    :isFocused="isFocused"
+    :appliedOptions="appliedOptions"
+  >
+    <div :class="styles.control.root + '-inner'">
+      <label v-if="computedLabel" :for="control.id + '-input'" class="primevue-control-label">
+        {{ computedLabel }}
+        <span v-if="control.required" class="primevue-control-required">*</span>
+      </label>
+      <Calendar
+        v-disabled-icon-focus
+        :id="control.id + '-input'"
+        :class="[styles.control.input, { 'p-invalid': control.errors }]"
+        :disabled="!control.enabled"
+        :placeholder="appliedOptions.placeholder ?? dateTimeFormat"
+        :show-time="showTime"
+        :time-only="timeOnly"
+        :model-value="pickerValue"
+        :date-format="dateFormat"
+        :hour-format="hourFormat"
+        v-bind="primeVueProps('Calendar')"
+        @update:model-value="onChange"
+        @focus="handleFocus"
+        @blur="handleBlur"
+      />
+      <small v-if="control.errors" class="primevue-control-error">{{ control.errors }}</small>
+      <small v-else-if="control.description && persistentHint()" class="primevue-control-hint">{{ control.description }}</small>
+    </div>
+  </control-wrapper>
+</template>
+
+<script lang="ts">
+import { type ControlElement } from '@jsonforms/core';
+import {
+  rendererProps,
+  useJsonFormsControl,
+  type RendererProps,
+} from '@jsonforms/vue';
+import { defineComponent } from 'vue';
+import Calendar from 'primevue/calendar';
+import { usePrimeVueControl, determineClearValue, parseDateTime } from '../util';
+import { default as ControlWrapper } from './ControlWrapper.vue';
+import { DisabledIconFocus } from './directives';
+
+const controlRenderer = defineComponent({
+  name: 'datetime-control-renderer',
+  components: {
+    ControlWrapper,
+    Calendar,
+  },
+  directives: {
+    DisabledIconFocus,
+  },
+  props: {
+    ...rendererProps<ControlElement>(),
+  },
+  setup(props: RendererProps<ControlElement>) {
+    const clearValue = determineClearValue('');
+    return usePrimeVueControl(
+      useJsonFormsControl(props),
+      (value) => value || clearValue,
+      300,
+    );
+  },
+  computed: {
+    showTime(): boolean {
+      const format = this.appliedOptions.dateTimeFormat;
+      return format ? /[HhmsaA]/.test(format) : false;
+    },
+    timeOnly(): boolean {
+      const format = this.appliedOptions.dateTimeFormat;
+      return format ? !/[Dd]/.test(format) : false;
+    },
+    dateTimeFormat(): string {
+      return this.appliedOptions.dateTimeFormat || 'mm/dd/yy';
+    },
+    dateTimeSaveFormat(): string {
+      return typeof this.appliedOptions.dateTimeSaveFormat == 'string'
+        ? this.appliedOptions.dateTimeSaveFormat
+        : 'YYYY-MM-DDTHH:mm:ss';
+    },
+    hourFormat(): string {
+      return this.appliedOptions.ampm === true ? '12' : '24';
+    },
+    pickerValue(): Date | null {
+      const value = this.control.data;
+      if (!value) {
+        return null;
+      }
+      const formats = [
+        this.dateTimeSaveFormat,
+        this.dateTimeFormat,
+        'YYYY-MM-DDTHH:mm:ss',
+        'YYYY-MM-DD HH:mm:ss',
+      ];
+      const date = parseDateTime(value, formats);
+      return date ? date.toDate() : null;
+    },
+    dateFormat(): string {
+      const format = this.appliedOptions.dateTimeFormat;
+      if (!format) {
+        return 'mm/dd/yy';
+      }
+      // Extract only the date portion (before time tokens)
+      const datePortion = this.extractDatePortion(format);
+      return this.convertToPrimeVueFormat(datePortion);
+    },
+  },
+  methods: {
+    /**
+     * Extract the date portion from a dayjs datetime format string.
+     * Time tokens (H, h, m, s, a, A, Z) and their adjacent separators
+     * are removed, leaving only date-related tokens.
+     */
+    extractDatePortion(format: string): string {
+      const timeTokens = [
+        'HH',
+        'hh',
+        'H',
+        'h',
+        'mm',
+        'm',
+        'ss',
+        's',
+        'A',
+        'a',
+        'Z',
+        'ZZ',
+        'X',
+        'x',
+      ];
+      let firstTimeIndex = -1;
+
+      for (const token of timeTokens) {
+        const index = format.indexOf(token);
+        if (index !== -1 && (firstTimeIndex === -1 || index < firstTimeIndex)) {
+          firstTimeIndex = index;
+        }
+      }
+
+      if (firstTimeIndex !== -1) {
+        let end = firstTimeIndex;
+        while (end > 0 && /[\s\-\/._,T:]/.test(format[end - 1])) {
+          end--;
+        }
+        return format.substring(0, end);
+      }
+
+      return format;
+    },
+    /**
+     * Convert dayjs date format tokens to PrimeVue Calendar format tokens.
+     * PrimeVue uses: yy=4-digit year, y=2-digit year, mm=month number,
+     * MM=month name, dd=day, d=day no-pad
+     */
+    convertToPrimeVueFormat(dayjsFormat: string): string {
+      return dayjsFormat
+        .split('YYYY')
+        .join('yy')
+        .split('yyyy')
+        .join('yy')
+        .split('YY')
+        .join('y')
+        .split('MMMM')
+        .join('MM')
+        .split('MMM')
+        .join('M')
+        .split('DD')
+        .join('dd')
+        .split('D')
+        .join('d')
+        .split('MM')
+        .join('mm');
+    },
+  },
+});
+
+export default controlRenderer;
+</script>
