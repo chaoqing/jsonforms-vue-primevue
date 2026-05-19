@@ -15,7 +15,10 @@ import {
   type ControlElement,
   type DispatchPropsOfControl,
   type DispatchPropsOfMultiEnumControl,
+  type JsonFormsCellRendererRegistryEntry,
+  type JsonFormsRendererRegistryEntry,
   type JsonFormsSubStates,
+  type JsonFormsUISchemaRegistryEntry,
   type JsonSchema,
   type UISchemaElement,
 } from '@jsonforms/core';
@@ -41,7 +44,7 @@ export const IconSymbol: InjectionKey<Required<IconOptions>> =
   Symbol.for('jsonforms:icons');
 
 export const useControlAppliedOptions = <
-  T extends { config: any; uischema: UISchemaElement },
+  T extends { uischema: UISchemaElement; [key: string]: any },
   I extends {
     control: ComputedRef<T>;
   },
@@ -51,7 +54,7 @@ export const useControlAppliedOptions = <
   return computed(() =>
     merge(
       {},
-      cloneDeep(input.control.value.config),
+      cloneDeep(input.control.value.config as any),
       cloneDeep(input.control.value.uischema.options),
     ),
   );
@@ -75,7 +78,7 @@ export const useLayoutAppliedOptions = <
 };
 
 export const useComputedLabel = <
-  T extends { label: string; required: boolean },
+  T extends { required: boolean; [key: string]: any },
   I extends { control: ComputedRef<T> },
 >(
   input: I,
@@ -83,8 +86,8 @@ export const useComputedLabel = <
 ) => {
   return computed((): string => {
     return computeLabel(
-      input.control.value.label,
-      input.control.value.required,
+      (input.control.value.label as string) ?? '',
+      (input.control.value.required as boolean) ?? false,
       !!appliedOptions.value?.hideRequiredAsterisk,
     );
   });
@@ -133,16 +136,12 @@ export const useVuetifyLabel = usePrimeVueLabel;
  */
 export const usePrimeVueControl = <
   T extends {
+    config: any;
     uischema: ControlElement;
     path: string;
-    config: any;
     label: string;
-    description: string;
     required: boolean;
-    errors: string;
-    id: string;
-    visible: boolean;
-    enabled: boolean;
+    [key: string]: any;
   },
   I extends {
     control: ComputedRef<T>;
@@ -250,6 +249,7 @@ export const useCombinatorTranslations = <
   T extends {
     i18nKeyPrefix: string;
     label: string;
+    [key: string]: any;
   },
   I extends {
     control: ComputedRef<T>;
@@ -280,7 +280,7 @@ export const useCombinatorTranslations = <
 
 export const isControlEditable = (control: {
   enabled: boolean;
-  readonly: boolean;
+  readonly?: boolean;
 }) => control.enabled && !control.readonly;
 
 export const useJsonForms = () => {
@@ -411,11 +411,23 @@ export const usePrimeVueArrayControl = <
     input.control.value.label,
   );
 
+  const readonly = computed(() => {
+    // Check in order: uischema.options.readonly > config.readonly > global readonly
+    if (typeof input.control.value.uischema?.options?.readonly === 'boolean') {
+      return input.control.value.uischema.options.readonly;
+    }
+    if (typeof input.control.value.config?.readonly === 'boolean') {
+      return input.control.value.config.readonly;
+    }
+    return jsonforms?.readonly === true;
+  });
+
   const overwrittenControl = computed(() => {
     return {
       ...input.control.value,
       childErrors: filteredChildErrors.value,
       translations,
+      readonly: readonly.value,
     };
   });
 

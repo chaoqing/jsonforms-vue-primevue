@@ -18,7 +18,7 @@
         :renderers="control.renderers"
         :cells="control.cells"
         :config="control.config"
-        :readonly="!isControlEditable(control)"
+        :readonly="!isControlEditable(control as any)"
         :validation-mode="validationMode"
         :i18n="i18n"
         :middleware="middleware"
@@ -40,10 +40,10 @@
             :schema="element.schema"
             :uischema="element.uischema"
             :path="element.path"
-            :enabled="control.enabled"
-            :readonly="control.readonly"
-            :renderers="control.renderers"
-            :cells="control.cells"
+            :enabled="(control as any).enabled"
+            :readonly="(control as any).readonly"
+            :renderers="(control as any).renderers"
+            :cells="(control as any).cells"
         /></div>
         <div v-if="control.enabled">
           <Button
@@ -96,6 +96,7 @@ import {
   provide,
   ref,
   unref,
+  type ComputedRef,
   type PropType,
 } from 'vue';
 import { Button, Tooltip } from 'primevue';
@@ -107,10 +108,11 @@ import {
   useIcons,
   useJsonForms,
   useTranslator,
+  usePrimeVueControl,
 } from '../../util';
 import { IsDynamicPropertyContext } from '@/util/inject';
 
-type Input = ReturnType<typeof useJsonFormsControlWithDetail>;
+type Input = ReturnType<typeof usePrimeVueControl> | ReturnType<typeof useJsonFormsControlWithDetail>;
 interface AdditionalPropertyType {
   propertyName: string;
   path: string;
@@ -394,7 +396,7 @@ export default defineComponent({
     addPropertyDisabled(): boolean {
       return (
         // add is disabled because the overall control is disabled
-        !this.isControlEditable(this.control) ||
+        !this.isControlEditable(this.control as any) ||
         // add is disabled because of contraints
         (this.appliedOptions.restrict && this.maxPropertiesReached) ||
         // add is disabled because there are errors for the new property name or it is not specified
@@ -415,7 +417,7 @@ export default defineComponent({
     removePropertyDisabled(): boolean {
       return (
         // add is disabled because the overall control is disabled
-        !this.isControlEditable(this.control) ||
+        !this.isControlEditable(this.control as any) ||
         // add is disabled because of contraints
         (this.appliedOptions.restrict && this.minPropertiesReached)
       );
@@ -499,7 +501,7 @@ export default defineComponent({
           );
 
           // we need always to preserve the key even when the value is "empty"
-          this.input.handleChange(this.control.path, updatedData);
+          (this.input as any).handleChange(this.control.path, updatedData);
         }
       }
       this.newPropertyName = '';
@@ -511,7 +513,7 @@ export default defineComponent({
       if (typeof this.control.data === 'object') {
         const updatedData = { ...this.control.data };
         delete updatedData[propName];
-        this.input.handleChange(this.control.path, updatedData);
+        (this.input as any).handleChange(this.control.path, updatedData);
       }
     },
   },

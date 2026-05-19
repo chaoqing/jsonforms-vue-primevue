@@ -74,7 +74,7 @@ const controlRenderer = defineComponent({
     return {
       ...control,
       nested,
-      input,
+      input: control,
       hasAdditionalProperties,
       showAdditionalProperties,
     };
