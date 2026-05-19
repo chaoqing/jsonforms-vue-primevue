@@ -30,7 +30,7 @@
         :key="prop"
         :header="title(prop)"
       >
-        <template #body="{ data, index }">
+        <template #body="{ index }">
           <dispatch-renderer
             :schema="control.schema"
             :uischema="resolveUiSchema(prop)"

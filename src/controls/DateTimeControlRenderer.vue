@@ -143,7 +143,7 @@ const controlRenderer = defineComponent({
 
       if (firstTimeIndex !== -1) {
         let end = firstTimeIndex;
-        while (end > 0 && /[\s\-\/._,T:]/.test(format[end - 1])) {
+        while (end > 0 && /[\s\-.，T:]/.test(format[end - 1])) {
           end--;
         }
         return format.substring(0, end);

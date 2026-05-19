@@ -10,8 +10,8 @@ help: ## Show this help
 
 # ─── Dependencies ───────────────────────────────────────────────
 
-install: ## Install dependencies (from monorepo root)
-	cd ../.. && pnpm install
+install: ## Install dependencies
+	pnpm install --frozen-lockfile
 
 # ─── Code Quality ───────────────────────────────────────────────
 

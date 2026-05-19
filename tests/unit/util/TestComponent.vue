@@ -1,15 +1,13 @@
 <template>
-  <v-app>
-    <json-forms
-      :data="data"
-      :schema="schema"
-      :uischema="uischema"
-      :renderers="renderers"
-      :config="config"
-      :i18n="i18n"
-      @change="onChange"
-    />
-  </v-app>
+  <json-forms
+    :data="data"
+    :schema="schema"
+    :uischema="uischema"
+    :renderers="renderers"
+    :config="config"
+    :i18n="i18n"
+    @change="onChange"
+  />
 </template>
 
 <script lang="ts">
@@ -32,7 +30,6 @@ import {
 import type Ajv from 'ajv';
 import type { ErrorObject } from 'ajv';
 import { defineComponent, reactive, type PropType } from 'vue';
-import { VApp } from 'vuetify/components';
 
 const EMPTY: ErrorObject[] = reactive([]);
 
@@ -40,7 +37,6 @@ export default defineComponent({
   name: 'test-component',
   components: {
     JsonForms,
-    VApp,
   },
   props: {
     data: {
