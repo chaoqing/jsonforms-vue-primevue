@@ -1,25 +1,28 @@
 <template>
-  <div
+  <Fluid
     v-if="layout.visible && (layout.uischema as Layout).elements.length > 0"
-    :class="styles.horizontalLayout.root"
   >
     <div
-      v-for="(element, index) in (layout.uischema as Layout).elements"
-      :key="`${layout.path}-${(layout.uischema as Layout).elements.length}-${index}`"
-      :class="styles.horizontalLayout.item"
-      :style="itemStyle"
+      :class="styles.horizontalLayout.root"
     >
-      <dispatch-renderer
-        :schema="layout.schema"
-        :uischema="element"
-        :path="layout.path"
-        :enabled="layout.enabled"
-        :readonly="layout.readonly"
-        :renderers="layout.renderers"
-        :cells="layout.cells"
-      />
+      <div
+        v-for="(element, index) in (layout.uischema as Layout).elements"
+        :key="`${layout.path}-${(layout.uischema as Layout).elements.length}-${index}`"
+        :class="styles.horizontalLayout.item"
+        :style="itemStyle"
+      >
+        <dispatch-renderer
+          :schema="layout.schema"
+          :uischema="element"
+          :path="layout.path"
+          :enabled="layout.enabled"
+          :readonly="layout.readonly"
+          :renderers="layout.renderers"
+          :cells="layout.cells"
+        />
+      </div>
     </div>
-  </div>
+  </Fluid>
 </template>
 
 <script lang="ts">
@@ -33,11 +36,13 @@ import {
 } from '@jsonforms/vue';
 import { computed, defineComponent } from 'vue';
 import { usePrimeVueLayout } from '../util';
+import Fluid from 'primevue/fluid';
 
 const layoutRenderer = defineComponent({
   name: 'horizontal-layout-renderer',
   components: {
     DispatchRenderer,
+    Fluid,
   },
   props: {
     ...rendererProps<Layout>(),
@@ -60,3 +65,18 @@ const layoutRenderer = defineComponent({
 
 export default layoutRenderer;
 </script>
+
+<style scoped>
+.horizontal-layout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--p-spacing-2, 0.5rem);
+}
+
+.horizontal-layout-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+</style>

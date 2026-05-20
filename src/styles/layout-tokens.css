@@ -1,0 +1,233 @@
+/**
+ * Layout Tokens CSS
+ * 
+ * This file contains shared CSS utilities for layout renderers using PrimeVue v4 design tokens.
+ * Provides base styling for responsive layouts, spacing, and visual hierarchy.
+ * 
+ * PrimeVue Design Tokens Used:
+ * - Spacing: var(--p-spacing-1) through var(--p-spacing-8)
+ * - Border Radius: var(--p-border-radius-md), var(--p-border-radius-lg)
+ * - Colors: var(--p-content-border-color), var(--p-surface-border), var(--p-text-color)
+ * - Font: var(--p-font-size), var(--p-line-height)
+ */
+
+/* Fluid Wrapper - full-width responsive input wrapper */
+.fluid-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Layout root containers */
+.vertical-layout,
+.horizontal-layout {
+  display: flex;
+  gap: var(--p-spacing-2, 0.5rem);
+}
+
+.vertical-layout {
+  flex-direction: column;
+}
+
+.horizontal-layout {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/* Layout items */
+.vertical-layout-item,
+.horizontal-layout-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Prevent flex overflow */
+}
+
+/* Horizontal layout items have equal flex grow */
+.horizontal-layout-item {
+  flex: 1 1 auto;
+  min-width: 200px;
+}
+
+/* Group layout */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-spacing-2, 0.5rem);
+  border: 1px solid var(--p-surface-border);
+  border-radius: var(--p-border-radius-md, 0.375rem);
+  padding: var(--p-spacing-3, 0.75rem);
+}
+
+.group-label {
+  font-weight: 600;
+  color: var(--p-text-color);
+  font-size: var(--p-font-size-base, 1rem);
+  margin-bottom: var(--p-spacing-1, 0.25rem);
+}
+
+.group-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.group-bare {
+  border: none;
+  padding: 0;
+  gap: var(--p-spacing-2, 0.5rem);
+}
+
+.group-align-left {
+  align-items: flex-start;
+}
+
+/* Array layout */
+.array-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-spacing-2, 0.5rem);
+}
+
+.array-list-item {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--p-surface-border);
+  border-radius: var(--p-border-radius-md, 0.375rem);
+  padding: var(--p-spacing-3, 0.75rem);
+  gap: var(--p-spacing-2, 0.5rem);
+}
+
+.array-list-toolbar {
+  display: flex;
+  gap: var(--p-spacing-2, 0.5rem);
+  align-items: center;
+  margin-bottom: var(--p-spacing-2, 0.5rem);
+}
+
+.array-list-title {
+  font-weight: 600;
+  flex: 1;
+}
+
+.array-list-item-header {
+  display: flex;
+  gap: var(--p-spacing-2, 0.5rem);
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Categorization (tabs) */
+.categorization {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-spacing-2, 0.5rem);
+}
+
+.categorization-item {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Control styling */
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-spacing-1, 0.25rem);
+}
+
+.control-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-spacing-1, 0.25rem);
+}
+
+.control .p-inputtext,
+.control .p-dropdown,
+.control .p-checkbox,
+.control .p-radiobutton,
+.control .p-inputnumber,
+.control .p-calendar,
+.control .p-autocomplete {
+  width: 100%;
+}
+
+/* Primevue control specific styling */
+.primevue-control-label {
+  font-weight: 500;
+  color: var(--p-text-color);
+  font-size: var(--p-font-size-sm, 0.875rem);
+  display: flex;
+  align-items: center;
+  gap: var(--p-spacing-1, 0.25rem);
+}
+
+.primevue-control-required {
+  color: var(--p-error-color, #f87171);
+  font-weight: 600;
+}
+
+.primevue-control-error {
+  color: var(--p-error-color, #f87171);
+  font-size: var(--p-font-size-sm, 0.875rem);
+  display: block;
+  margin-top: var(--p-spacing-1, 0.25rem);
+}
+
+.primevue-control-hint {
+  color: var(--p-text-color-secondary, #6b7280);
+  font-size: var(--p-font-size-sm, 0.875rem);
+  display: block;
+  margin-top: var(--p-spacing-1, 0.25rem);
+}
+
+/* List with detail layout */
+.list-with-detail {
+  display: flex;
+  gap: var(--p-spacing-3, 0.75rem);
+}
+
+.list-with-detail-toolbar {
+  display: flex;
+  gap: var(--p-spacing-2, 0.5rem);
+  margin-bottom: var(--p-spacing-2, 0.5rem);
+}
+
+/* Utility classes for common patterns */
+.space-y-2 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-spacing-2, 0.5rem);
+}
+
+.space-y-3 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-spacing-3, 0.75rem);
+}
+
+.space-x-2 {
+  display: flex;
+  flex-direction: row;
+  gap: var(--p-spacing-2, 0.5rem);
+}
+
+.space-x-3 {
+  display: flex;
+  flex-direction: row;
+  gap: var(--p-spacing-3, 0.75rem);
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 768px) {
+  .horizontal-layout {
+    flex-direction: column;
+  }
+
+  .horizontal-layout-item {
+    min-width: auto;
+    flex: 1 1 100%;
+  }
+
+  .list-with-detail {
+    flex-direction: column;
+  }
+}
