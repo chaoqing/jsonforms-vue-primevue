@@ -1,37 +1,39 @@
 <template>
-  <div v-if="layout.visible" :class="styles.categorization.root">
-    <Tabs
-      v-model:value="activeCategory"
-      :orientation="appliedOptions.vertical ? 'vertical' : 'horizontal'"
-    >
-      <TabList>
-        <Tab
-          v-for="(_, index) in visibleCategories"
-          :key="`${layout.path}-${visibleCategories.length}-${index}`"
-          :value="index"
-        >
-          {{ visibleCategoryLabels[index] }}
-        </Tab>
-      </TabList>
-      <TabPanels>
-        <TabPanel
-          v-for="(element, index) in visibleCategories"
-          :key="`${layout.path}-${visibleCategories.length}-${index}`"
-          :value="index"
-        >
-          <dispatch-renderer
-            :schema="layout.schema"
-            :uischema="element.value.uischema"
-            :path="layout.path"
-            :enabled="layout.enabled"
-            :readonly="layout.readonly"
-            :renderers="layout.renderers"
-            :cells="layout.cells"
-          />
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
-  </div>
+  <Fluid v-if="layout.visible">
+    <div :class="styles.categorization.root">
+      <Tabs
+        v-model:value="activeCategory"
+        :orientation="appliedOptions.vertical ? 'vertical' : 'horizontal'"
+      >
+        <TabList>
+          <Tab
+            v-for="(_, index) in visibleCategories"
+            :key="`${layout.path}-${visibleCategories.length}-${index}`"
+            :value="index"
+          >
+            {{ visibleCategoryLabels[index] }}
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel
+            v-for="(element, index) in visibleCategories"
+            :key="`${layout.path}-${visibleCategories.length}-${index}`"
+            :value="index"
+          >
+            <dispatch-renderer
+              :schema="layout.schema"
+              :uischema="element.value.uischema"
+              :path="layout.path"
+              :enabled="layout.enabled"
+              :readonly="layout.readonly"
+              :renderers="layout.renderers"
+              :cells="layout.cells"
+            />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    </div>
+  </Fluid>
 </template>
 
 <script lang="ts">
@@ -49,6 +51,7 @@ import TabList from 'primevue/tablist';
 import Tab from 'primevue/tab';
 import TabPanels from 'primevue/tabpanels';
 import TabPanel from 'primevue/tabpanel';
+import Fluid from 'primevue/fluid';
 import { usePrimeVueLayout } from '../util';
 
 const layoutRenderer = defineComponent({
@@ -60,6 +63,7 @@ const layoutRenderer = defineComponent({
     Tab,
     TabPanels,
     TabPanel,
+    Fluid,
   },
   props: {
     ...rendererProps<Layout>(),
@@ -85,3 +89,11 @@ const layoutRenderer = defineComponent({
 
 export default layoutRenderer;
 </script>
+
+<style scoped>
+.categorization {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-spacing-2, 0.5rem);
+}
+</style>
