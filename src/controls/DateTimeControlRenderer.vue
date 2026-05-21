@@ -11,7 +11,7 @@
           {{ computedLabel }}
           <span v-if="control.required" class="primevue-control-required">*</span>
         </label>
-        <Calendar
+        <DatePicker
           v-disabled-icon-focus
           :id="control.id + '-input'"
           :class="[styles.control.input, { 'p-invalid': control.errors }]"
@@ -22,7 +22,7 @@
           :model-value="pickerValue"
           :date-format="dateFormat"
           :hour-format="hourFormat"
-          v-bind="primeVueProps('Calendar')"
+          v-bind="primeVueProps('DatePicker')"
           @update:model-value="onChange"
           @focus="handleFocus"
           @blur="handleBlur"
@@ -42,7 +42,7 @@ import {
   type RendererProps,
 } from '@jsonforms/vue';
 import { defineComponent } from 'vue';
-import Calendar from 'primevue/calendar';
+import DatePicker from 'primevue/datepicker';
 import Fluid from 'primevue/fluid';
 import { usePrimeVueControl, determineClearValue, parseDateTime } from '../util';
 import { default as ControlWrapper } from './ControlWrapper.vue';
@@ -52,7 +52,7 @@ const controlRenderer = defineComponent({
   name: 'datetime-control-renderer',
   components: {
     ControlWrapper,
-    Calendar,
+    DatePicker,
     Fluid,
   },
   directives: {
@@ -192,7 +192,7 @@ export default controlRenderer;
   gap: var(--p-spacing-1, 0.25rem);
 }
 
-.control-inner .p-calendar {
+.control-inner .p-datepicker {
   width: 100%;
 }
 
