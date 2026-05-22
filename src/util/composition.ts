@@ -88,7 +88,9 @@ export const useComputedLabel = <
     return computeLabel(
       (input.control.value.label as string) ?? '',
       (input.control.value.required as boolean) ?? false,
-      !!appliedOptions.value?.hideRequiredAsterisk,
+      true, // appliedOptions.value?.hideRequiredAsterisk !== false,
+      // vue-primevue always render the asterisk itself, 
+      // so disable the one from @jsonforms/core
     );
   });
 };
