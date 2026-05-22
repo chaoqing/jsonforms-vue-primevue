@@ -1,5 +1,9 @@
 import {
   rankWith,
+  schemaMatches,
+  uiTypeIs,
+  and,
+  type TesterContext,
   type JsonFormsRendererRegistryEntry,
   type JsonSchema,
   type UISchemaElement,
@@ -19,6 +23,7 @@ const isArrayOfStrings = (schema: JsonSchema): boolean => {
 const isChipsControl = (
   uischema: UISchemaElement,
   schema: JsonSchema,
+  context: TesterContext,
 ): boolean => {
   // Check if explicit chips option is set
   const chipsOption = (uischema as any)?.options?.chips;
@@ -31,10 +36,10 @@ const isChipsControl = (
   }
 
   // Check if schema is array of strings
-  return isArrayOfStrings(schema);
+  return schemaMatches(isArrayOfStrings)(uischema, schema, context);
 };
 
 export const entry: JsonFormsRendererRegistryEntry = {
   renderer: controlRenderer,
-  tester: rankWith(5, isChipsControl),
+  tester: rankWith(5, and(uiTypeIs('Control'), isChipsControl)),
 };
