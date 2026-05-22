@@ -6,7 +6,7 @@
       :isFocused="isFocused"
       :appliedOptions="appliedOptions"
     >
-      <Dropdown
+      <Select
         :id="control.id + '-input'"
         :class="styles.control.input"
         :disabled="!control.enabled"
@@ -22,7 +22,7 @@
         :maxlength="
           appliedOptions.restrict ? control.schema.maxLength : undefined
         "
-        v-bind="primeVueProps('Dropdown')"
+        v-bind="primeVueProps('Select')"
         @update:model-value="onChange"
         @focus="handleFocus"
         @blur="handleBlur"
@@ -39,7 +39,7 @@ import {
   type RendererProps,
 } from '@jsonforms/vue';
 import { defineComponent } from 'vue';
-import Dropdown from 'primevue/dropdown';
+import Select from 'primevue/select';
 import Fluid from 'primevue/fluid';
 import { determineClearValue, usePrimeVueControl } from '../util';
 import { default as ControlWrapper } from './ControlWrapper.vue';
@@ -48,7 +48,7 @@ const controlRenderer = defineComponent({
   name: 'anyof-string-or-enum-control-renderer',
   components: {
     ControlWrapper,
-    Dropdown,
+    Select,
     Fluid,
   },
   props: {
@@ -85,7 +85,7 @@ const findEnumSchema = (schemas: JsonSchema[]) =>
   gap: var(--p-spacing-1, 0.25rem);
 }
 
-.control-inner .p-dropdown {
+.control-inner .p-select {
   width: 100%;
 }
 
