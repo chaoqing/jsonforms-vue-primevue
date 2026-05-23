@@ -73,19 +73,19 @@ const controlRenderer = defineComponent({
   computed: {
     showTime(): boolean {
      const format = this.appliedOptions.dateTimeFormat;
-     return format ? /[HhmsaA]/.test(format) : false;
+     return format ? /[HhmsaA]/.test(format) : true;
     },
     timeOnly(): boolean {
      const format = this.appliedOptions.dateTimeFormat;
      return format ? !/[Dd]/.test(format) : false;
     },
     dateTimeFormat(): string {
-     return this.appliedOptions.dateTimeFormat || 'mm/dd/yy';
+     return this.appliedOptions.dateTimeFormat || 'MM/DD/YYYY hh:mm A';
     },
     dateTimeSaveFormat(): string {
      return typeof this.appliedOptions.dateTimeSaveFormat == 'string'
        ? this.appliedOptions.dateTimeSaveFormat
-       : 'YYYY-MM-DDTHH:mm:ss';
+       : 'YYYY-MM-DDTHH:mm:ss.SSSZ';
     },
     hourFormat(): string {
      return this.appliedOptions.ampm === true ? '12' : '24';
