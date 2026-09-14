@@ -80,12 +80,12 @@ const controlRenderer = defineComponent({
      return format ? !/[Dd]/.test(format) : false;
     },
     dateTimeFormat(): string {
-     return this.appliedOptions.dateTimeFormat || 'MM/DD/YYYY hh:mm A';
+     return this.appliedOptions.dateTimeFormat || 'YYYY-MM-DD HH:mm';
     },
     dateTimeSaveFormat(): string {
      return typeof this.appliedOptions.dateTimeSaveFormat == 'string'
        ? this.appliedOptions.dateTimeSaveFormat
-       : 'YYYY-MM-DDTHH:mm:ss.SSSZ';
+       : 'YYYY-MM-DDTHH:mm:ssZ';
     },
     hourFormat(): string {
      return this.appliedOptions.ampm === true ? '12' : '24';
@@ -95,9 +95,15 @@ const controlRenderer = defineComponent({
      if (!value) {
        return null;
      }
+     const nativeParsed = dayjs(value);
+     if (nativeParsed.isValid()){
+       return nativeParsed.toDate();
+     }
      const formats = [
        this.dateTimeSaveFormat,
        this.dateTimeFormat,
+       'YYYY-MM-DDTHH:mm:ssZ',
+       'YYYY-MM-DDTHH:mm:ss.SSSZ',
        'YYYY-MM-DDTHH:mm:ss',
        'YYYY-MM-DD HH:mm:ss',
      ];
@@ -107,7 +113,7 @@ const controlRenderer = defineComponent({
     dateFormat(): string {
      const format = this.appliedOptions.dateTimeFormat;
      if (!format) {
-       return 'mm/dd/yy';
+       return 'yy-mm-dd';
      }
      // Extract only the date portion (before time tokens)
      const datePortion = this.extractDatePortion(format);
